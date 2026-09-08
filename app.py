@@ -2,6 +2,7 @@ import streamlit as st
 from search import search, messages, get_context
 from parser import parse_whatsapp_chat
 import hashlib
+import re
 
 
 # =========================================================
@@ -342,6 +343,7 @@ if not st.session_state.conversation_started:
         unsafe_allow_html=True
     )
 
+
     # -----------------------------------------------------
     # DEFAULT DEMO STATISTICS
     # -----------------------------------------------------
@@ -349,6 +351,7 @@ if not st.session_state.conversation_started:
     overview_messages = 4287
     overview_participants = 8
     overview_date_range = "Jan–Jun 2026"
+
 
     # -----------------------------------------------------
     # UPLOADED FILE STATISTICS
@@ -374,7 +377,9 @@ if not st.session_state.conversation_started:
         ]
 
         if timestamps:
+
             try:
+
                 dates = [
                     timestamp[:10]
                     for timestamp in timestamps
@@ -388,28 +393,33 @@ if not st.session_state.conversation_started:
                 )
 
             except Exception:
+
                 overview_date_range = "Available"
 
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
+
         st.metric(
             label="Messages",
             value=f"{overview_messages:,}"
         )
 
     with col2:
+
         st.metric(
             label="Participants",
             value=overview_participants
         )
 
     with col3:
+
         st.metric(
             label="Date Range",
             value=overview_date_range
         )
+
 
     st.markdown(
         '</div>',
@@ -417,9 +427,9 @@ if not st.session_state.conversation_started:
     )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # UPLOAD CONVERSATION
-    # -----------------------------------------------------
+    # =====================================================
 
     st.markdown(
         '<div style="font-size:1.15rem;font-weight:800;'
@@ -429,6 +439,7 @@ if not st.session_state.conversation_started:
         unsafe_allow_html=True
     )
 
+
     uploaded_file = st.file_uploader(
         "Choose WhatsApp .txt",
         type=["txt"],
@@ -436,9 +447,9 @@ if not st.session_state.conversation_started:
     )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # HANDLE UPLOAD
-    # -----------------------------------------------------
+    # =====================================================
 
     if uploaded_file is not None:
 
@@ -489,9 +500,9 @@ if not st.session_state.conversation_started:
             )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # OR
-    # -----------------------------------------------------
+    # =====================================================
 
     st.markdown(
         '<div style="text-align:center;color:#A899BC;'
@@ -500,9 +511,9 @@ if not st.session_state.conversation_started:
     )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # DEMO BUTTON
-    # -----------------------------------------------------
+    # =====================================================
 
     if st.button(
         "💬 Use Demo Conversation",
@@ -514,9 +525,9 @@ if not st.session_state.conversation_started:
         st.session_state.uploaded_messages = None
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # SHOW DEMO SELECTION
-    # -----------------------------------------------------
+    # =====================================================
 
     if st.session_state.use_demo:
 
@@ -525,9 +536,9 @@ if not st.session_state.conversation_started:
         )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # START SEARCHING
-    # -----------------------------------------------------
+    # =====================================================
 
     if (
         st.session_state.uploaded_messages
@@ -549,9 +560,9 @@ if not st.session_state.conversation_started:
             st.rerun()
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # STOP SELECTION SCREEN
-    # -----------------------------------------------------
+    # =====================================================
 
     st.stop()
 
@@ -600,79 +611,240 @@ if show_decisions and not query:
         unsafe_allow_html=True
     )
 
-    decision_ids = [
-        310,     # Manali trip
-        662,     # Party budget
-        2821     # Deadline extension
-    ]
+    # -----------------------------------------------------
+    # SELECT CORPUS
+    # -----------------------------------------------------
+
+    if st.session_state.uploaded_messages:
+
+        decision_corpus = st.session_state.uploaded_messages
+
+        # Decision-related phrases commonly used in chats
+        decision_patterns = [
+            r"\bfinal\b",
+            r"\bfinalized\b",
+            r"\bdecided\b",
+            r"\bdecision\b",
+            r"\bfix\b",
+            r"\bfixed\b",
+            r"\bconfirm\b",
+            r"\bconfirmed\b",
+            r"\bconfirmation\b",
+            r"\bagree\b",
+            r"\bagreed\b",
+            r"\bapprove\b",
+            r"\bapproved\b",
+            r"\bselect\b",
+            r"\bselected\b",
+            r"\bchoose\b",
+            r"\bchosen\b",
+            r"\blets go with\b",
+            r"\blet's go with\b",
+            r"\bgo with\b",
+            r"\bok fir\b",
+            r"\btoh final\b",
+            r"\bfinal hai\b",
+            r"\bfix hai\b",
+            r"\bpakka\b"
+        ]
+
+        decision_messages = []
+
+        for message in decision_corpus:
+
+            text = message.get("text", "").strip()
+
+            if not text:
+                continue
+
+            text_lower = text.lower()
+
+            matched = any(
+                re.search(pattern, text_lower)
+                for pattern in decision_patterns
+            )
+
+            if matched:
+                decision_messages.append(message)
+
+        # Keep latest/relevant decisions first
+        decision_messages = decision_messages[-10:][::-1]
+
+    else:
+
+        # -------------------------------------------------
+        # DEMO DECISIONS
+        # -------------------------------------------------
+
+        decision_ids = [
+            310,
+            662,
+            2821
+        ]
+
+        decision_messages = [
+            m for m in messages
+            if m["id"] in decision_ids
+        ]
 
 
     # -----------------------------------------------------
-    # DISPLAY EACH DECISION
+    # NO DECISIONS
     # -----------------------------------------------------
 
-    for did in decision_ids:
+    if not decision_messages:
 
-        msg = next(
-            (
-                m for m in messages
-                if m["id"] == did
-            ),
-            None
+        st.info(
+            "No clear decisions detected in this conversation."
         )
 
-        if msg is None:
-            continue
 
+    # -----------------------------------------------------
+    # DISPLAY DECISIONS
+    # -----------------------------------------------------
 
-        # -------------------------------------------------
-        # RESULT CARD
-        # -------------------------------------------------
+    else:
 
-        with st.container():
+        for msg in decision_messages:
 
-            st.markdown(
-                '<div class="result-card">',
-                unsafe_allow_html=True
-            )
-
-            col_avatar, col_message = st.columns(
-                [0.12, 0.88]
-            )
-
-
-            # ---------------------------------------------
-            # AVATAR
-            # ---------------------------------------------
-
-            with col_avatar:
-
-                initial = msg["sender"][0].upper()
-
-                color = avatar_color(
-                    msg["sender"]
-                )
+            with st.container():
 
                 st.markdown(
-                    f"""
-                    <div style="
-                        width:38px;
-                        height:38px;
-                        border-radius:50%;
-                        background:{color};
-                        color:white;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        font-weight:800;
-                        font-size:1rem;
-                    ">
-                        {initial}
-                    </div>
-                    """,
+                    '<div class="result-card">',
                     unsafe_allow_html=True
                 )
 
+                col_avatar, col_message = st.columns(
+                    [0.12, 0.88]
+                )
+
+
+                # -----------------------------------------
+                # AVATAR
+                # -----------------------------------------
+
+                with col_avatar:
+
+                    initial = msg["sender"][0].upper()
+
+                    color = avatar_color(
+                        msg["sender"]
+                    )
+
+                    st.markdown(
+                        f"""
+                        <div style="
+                            width:38px;
+                            height:38px;
+                            border-radius:50%;
+                            background:{color};
+                            color:white;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-weight:800;
+                            font-size:1rem;
+                        ">
+                            {initial}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+
+                # -----------------------------------------
+                # MESSAGE
+                # -----------------------------------------
+
+                with col_message:
+
+                    st.markdown(
+                        f"""
+                        <div style="
+                            font-weight:800;
+                            color:#2D2438;
+                            font-size:1rem;
+                        ">
+                            {msg["sender"]}
+                        </div>
+
+                        <div style="
+                            color:#B5ABC4;
+                            font-size:0.78rem;
+                            margin-top:2px;
+                        ">
+                            {msg["timestamp"]}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+                    st.markdown(
+                        f"""
+                        <div class="message-text">
+                            {msg["text"]}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+
+                st.markdown(
+                    '</div>',
+                    unsafe_allow_html=True
+                )
+
+
+            # ---------------------------------------------
+            # FULL THREAD
+            # ---------------------------------------------
+
+            with st.expander(
+                "💭 Show full thread"
+            ):
+
+                # Uploaded chat
+                if st.session_state.uploaded_messages:
+
+                    context = get_context(
+                        msg["id"],
+                        window=4,
+                        corpus=st.session_state.uploaded_messages
+                    )
+
+                # Demo chat
+                else:
+
+                    context = get_context(
+                        msg["id"],
+                        window=4
+                    )
+
+                for c in context:
+
+                    if c["id"] == msg["id"]:
+
+                        st.markdown(
+                            f"""
+                            <div class="highlight-line">
+                                ➤ <b>{c["sender"]}:</b>
+                                {c["text"]}
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
+
+                    else:
+
+                        st.markdown(
+                            f"""
+                            <div class="context-line">
+                                <b>{c["sender"]}:</b>
+                                {c["text"]}
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
 
             # ---------------------------------------------
             # MESSAGE
@@ -767,15 +939,43 @@ elif query:
         "Searching through the chat..."
     ):
 
-        results, explanation = search(
-            query,
-            top_k=5
-        )
+        # -------------------------------------------------
+        # DEMO SEARCH
+        # -------------------------------------------------
+
+        if st.session_state.use_demo:
+
+            results, explanation = search(
+                query,
+                top_k=5
+            )
+
+        # -------------------------------------------------
+        # UPLOADED CHAT SEARCH
+        # -------------------------------------------------
+
+        elif st.session_state.uploaded_messages:
+
+            results, explanation = search(
+                query,
+                top_k=5,
+                corpus=st.session_state.uploaded_messages
+            )
+
+        # -------------------------------------------------
+        # NO CONVERSATION
+        # -------------------------------------------------
+
+        else:
+
+            results = []
+
+            explanation = "No conversation selected"
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # SEARCH TYPE
-    # -----------------------------------------------------
+    # =====================================================
 
     st.markdown(
         f'<div class="type-badge">'
@@ -785,9 +985,9 @@ elif query:
     )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # NO RESULTS
-    # -----------------------------------------------------
+    # =====================================================
 
     if not results:
 
@@ -800,9 +1000,9 @@ elif query:
         )
 
 
-    # -----------------------------------------------------
+    # =====================================================
     # RESULTS
-    # -----------------------------------------------------
+    # =====================================================
 
     else:
 
