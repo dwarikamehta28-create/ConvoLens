@@ -1,0 +1,178 @@
+[
+  {
+    "query": "which place did the group finally agree to visit",
+    "answer_id": 310
+  },
+  {
+    "query": "did they pick a cold hill station for the trip",
+    "answer_id": 306
+  },
+  {
+    "query": "how much budget was approved for the farewell party",
+    "answer_id": 662
+  },
+  {
+    "query": "till what date is the project submission extended",
+    "answer_id": 2821
+  },
+  {
+    "query": "is it confirmed that the deadline was pushed",
+    "answer_id": 2822
+  },
+  {
+    "query": "when is the group planning to travel",
+    "answer_id": 313
+  },
+  {
+    "query": "how much money does each person need for the trip",
+    "answer_id": 309
+  },
+  {
+    "query": "did someone want to go somewhere cool because of the heat",
+    "answer_id": 305
+  },
+  {
+    "query": "who said they will join the trip",
+    "answer_id": 311
+  },
+  {
+    "query": "was there an announcement about mess meal timings",
+    "answer_id": 39
+  },
+  {
+    "query": "is there a deadline for paying college fees",
+    "answer_id": 6
+  },
+  {
+    "query": "did people feel relieved after the deadline news",
+    "answer_id": 2825
+  },
+  {
+    "query": "was low attendance mentioned as a concern",
+    "answer_id": 9
+  },
+  {
+    "query": "is college closed tomorrow",
+    "answer_id": 104
+  },
+  {
+    "query": "did someone ask if the exam form was filled",
+    "answer_id": 25
+  },
+  {
+    "query": "what did Palak say about the party budget",
+    "answer_id": 662
+  },
+  {
+    "query": "what did Dwarika decide about the manali trip",
+    "answer_id": 310
+  },
+  {
+    "query": "what update did Apurva give about the deadline",
+    "answer_id": 2821
+  },
+  {
+    "query": "what did Argha suggest for the trip location",
+    "answer_id": 305
+  },
+  {
+    "query": "what did Priyanshi ask about the trip dates",
+    "answer_id": 312
+  },
+  {
+    "query": "did Sugna confirm she's coming on the trip",
+    "answer_id": 311
+  },
+  {
+    "query": "what concern did Drishti raise about the venue",
+    "answer_id": 660
+  },
+  {
+    "query": "what did Apurva mention about the deadline mail",
+    "answer_id": 2823
+  },
+  {
+    "query": "what did we discuss in January",
+    "answer_id": null
+  },
+  {
+    "query": "what did we discuss last month",
+    "answer_id": null
+  },
+  {
+    "query": "any messages from March",
+    "answer_id": null
+  },
+  {
+    "query": "what did Dwarika say recently",
+    "answer_id": null
+  },
+  {
+    "query": "who is responsible for covering the venue cost",
+    "answer_id": 661
+  },
+  {
+    "query": "was the holiday destination finalized",
+    "answer_id": 310
+  },
+  {
+    "query": "did the group feel less stressed after the deadline update",
+    "answer_id": 2824
+  },
+  {
+    "query": "is low attendance a worry for anyone",
+    "answer_id": 9
+  },
+  {
+    "query": "was a change in dining hall timing announced",
+    "answer_id": 39
+  },
+  {
+    "query": "did anyone agree to come for the group outing",
+    "answer_id": 311
+  },
+  {
+    "query": "has the cost per head for the trip been settled",
+    "answer_id": 309
+  },
+  {
+    "query": "did people feel thankful about the new due date",
+    "answer_id": 2824
+  },
+  {
+    "query": "someone stuck in traffic",
+    "answer_id": 85
+  },
+  {
+    "query": "someone just woke up",
+    "answer_id": 13
+  },
+  {
+    "query": "internet connectivity issue",
+    "answer_id": 199
+  },
+  {
+    "query": "request to share class notes",
+    "answer_id": 55
+  },
+  {
+    "query": "plan to watch a movie together",
+    "answer_id": 18
+  },
+  {
+    "query": "kal weather kaisa rahega",
+    "answer_id": "NOT_COVERED"
+  },
+  {
+    "query": "kisne exam diya aur kisne nahi",
+    "answer_id": "NOT_COVERED"
+  },
+  {
+    "query": "office ka wifi password kya hai",
+    "answer_id": "NOT_COVERED"
+  },
+  {
+    "query": "kaunsa restaurant best hai yaha",
+    "answer_id": "NOT_COVERED"
+  }
+]
